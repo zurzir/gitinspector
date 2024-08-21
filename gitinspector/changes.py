@@ -136,7 +136,7 @@ class ChangesThread(threading.Thread):
 
 		__changes_lock__.acquire() # Global lock used to protect calls from here...
 
-		for i in lines:
+		for idx, i in enumerate(lines):
 			j = i.strip().decode("unicode_escape", "ignore")
 			j = j.encode("latin-1", "replace")
 			j = j.decode("utf-8", "replace")
@@ -146,7 +146,7 @@ class ChangesThread(threading.Thread):
 				self.changes.emails_by_author[author] = email
 				self.changes.authors_by_email[email] = author
 
-			if Commit.is_commit_line(j) or i is lines[-1]:
+			if Commit.is_commit_line(j) or idx == len(lines) - 1:
 				if found_valid_extension:
 					bisect.insort(commits, commit)
 
